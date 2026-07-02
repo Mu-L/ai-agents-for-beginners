@@ -14,7 +14,7 @@ To complete this exercise, you need the following:
 > **Note:** Microsoft Foundry was formerly known as Azure AI Studio.
 
 1. Follow these guidelines from the [Microsoft Foundry](https://learn.microsoft.com/en-us/azure/ai-studio/?WT.mc_id=academic-105485-koreyst) blog post for creating a Microsoft Foundry hub.
-2.  When your project is created, close any tips that are displayed and review the project page in Microsoft Foundry portal, which should look similar to the following image:
+2. When your project is created, close any tips that are displayed and review the project page in the Microsoft Foundry portal, which should look similar to the following image:
 
     ![Microsoft Foundry Project](./images/azure-ai-foundry.png)
 
