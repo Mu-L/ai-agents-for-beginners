@@ -217,13 +217,11 @@ public class DraftExecutor : ReflectingExecutor<DraftExecutor>, IMessageHandler<
         
         var response = await this._evangelistAgent.RunAsync(message);
         
-        Console.WriteLine($"DraftExecutor response: {response.Text}");
-        
         // The agent may wrap its JSON result in a Markdown code block (```json ... ```),
         // so extract the JSON object before deserializing it into a ContentResult.
         var contentResult = JsonSerializer.Deserialize<ContentResult>(ExtractJson(response.Text)) ?? new ContentResult { DraftContent = response.Text ?? string.Empty };
         
-        Console.WriteLine($"DraftExecutor generated content: {contentResult.DraftContent}");
+        Console.WriteLine($"DraftExecutor generated draft length: {contentResult.DraftContent?.Length ?? 0}");
         
         return contentResult;
     }
