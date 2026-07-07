@@ -4,6 +4,7 @@
 #:package Microsoft.Agents.AI.OpenAI@1.*-*
 #:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.13.1
+#:package DotNetEnv@3.1.1
 
 using System.ComponentModel;
 
@@ -12,6 +13,12 @@ using Microsoft.Extensions.AI;
 
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using OpenAI.Chat;
+
+using DotNetEnv;
+
+// Load environment variables
+Env.Load("./.env");
 
 // Tool Function: Random Destination Generator
 // This static method will be available to the agent as a callable tool
@@ -78,8 +85,8 @@ Always prioritize user preferences. If they mention a specific destination like 
 // Configure agent with name, detailed instructions, and available tools
 // This demonstrates the .NET agent creation pattern with full configuration
 AIAgent agent = azureClient
-    .GetOpenAIResponseClient(deployment)
-    .CreateAIAgent(
+    .GetChatClient(deployment)
+    .AsAIAgent(
         name: AGENT_NAME,
         instructions: AGENT_INSTRUCTIONS,
         tools: [AIFunctionFactory.Create(GetRandomDestination)]
