@@ -4,6 +4,7 @@
 #:package Microsoft.Agents.AI.OpenAI@1.*-*
 #:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.13.1
+#:package DotNetEnv@3.1.1
 
 using System.ComponentModel;
 
@@ -12,6 +13,12 @@ using Microsoft.Extensions.AI;
 
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using OpenAI.Chat;
+
+using DotNetEnv;
+
+// Load environment variables
+Env.Load("../../.env");
 
 // ============================================================================
 // AGENTIC DESIGN PRINCIPLES DEMONSTRATION
@@ -111,8 +118,8 @@ What kind of trip would you like me to help you plan today?"
 
 // Create AI Agent with Design Principles
 AIAgent agent = azureClient
-    .GetOpenAIResponseClient(deployment)
-    .CreateAIAgent(
+    .GetChatClient(deployment)
+    .AsAIAgent(
         name: AGENT_NAME,
         instructions: AGENT_INSTRUCTIONS,
         tools: [
@@ -122,7 +129,7 @@ AIAgent agent = azureClient
     );
 
 // Create Conversation Session for Context Management
-await using var session = await agent.CreateSessionAsync();
+var session = await agent.CreateSessionAsync();
 
 // ============================================================================
 // DEMONSTRATION: Start with "Hello" to trigger the greeting (Issue #402 fix)
