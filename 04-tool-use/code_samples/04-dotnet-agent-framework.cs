@@ -4,6 +4,7 @@
 #:package Microsoft.Agents.AI.OpenAI@1.*-*
 #:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.13.1
+#:package DotNetEnv@3.1.1
 
 using System.ComponentModel;
 using System.Text.Json;
@@ -13,6 +14,12 @@ using Microsoft.Extensions.AI;
 
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using OpenAI.Chat;
+
+using DotNetEnv;
+
+// Load environment variables
+Env.Load("../../.env");
 
 // ============================================================================
 // TOOL USE DESIGN PATTERN DEMONSTRATION
@@ -217,8 +224,8 @@ Always mention which tools you used so users understand the agent's capabilities
 // Create AI Agent with Multiple Tools
 // This demonstrates the Tool Use Design Pattern with a variety of tool types
 AIAgent agent = azureClient
-    .GetOpenAIResponseClient(deployment)
-    .CreateAIAgent(
+    .GetChatClient(deployment)
+    .AsAIAgent(
         name: AGENT_NAME,
         instructions: AGENT_INSTRUCTIONS,
         tools: [
