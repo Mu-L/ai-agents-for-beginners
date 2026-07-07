@@ -18,7 +18,7 @@ using OpenAI.Chat;
 using DotNetEnv;
 
 // Load environment variables
-Env.Load("../../../.env");
+Env.Load("../../.env");
 
 // Tool Function: Random Destination Generator
 // This static method will be available to the agent as a callable tool
