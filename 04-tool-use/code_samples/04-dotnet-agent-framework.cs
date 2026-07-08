@@ -4,7 +4,6 @@
 #:package Microsoft.Agents.AI.OpenAI@1.*-*
 #:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.13.1
-#:package DotNetEnv@3.1.1
 
 using System.ComponentModel;
 using System.Text.Json;
@@ -15,11 +14,6 @@ using Microsoft.Extensions.AI;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using OpenAI.Chat;
-
-using DotNetEnv;
-
-// Load environment variables
-Env.Load("../../.env");
 
 // ============================================================================
 // TOOL USE DESIGN PATTERN DEMONSTRATION
