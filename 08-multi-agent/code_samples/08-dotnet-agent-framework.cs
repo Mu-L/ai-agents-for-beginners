@@ -35,7 +35,7 @@ var azureClient = new AzureOpenAIClient(new Uri(azureEndpoint), new AzureCliCred
 // Define agent roles and instructions
 const string REVIEWER_NAME = "Concierge";
 const string REVIEWER_INSTRUCTIONS = @"""
-    You are an are hotel concierge who has opinions about providing the most local and authentic experiences for travelers.
+    You are a hotel concierge who has opinions about providing the most local and authentic experiences for travelers.
     The goal is to determine if the front desk travel agent has recommended the best non-touristy experience for a traveler.
     If so, state that it is approved.
     If not, provide insight on how to refine the recommendation without using a specific example. 
