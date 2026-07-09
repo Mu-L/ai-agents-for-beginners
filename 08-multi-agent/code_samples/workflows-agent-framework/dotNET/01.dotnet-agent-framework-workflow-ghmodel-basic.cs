@@ -81,7 +81,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
         }
         if (id == executorComplete.ExecutorId)
         {
-            messageData += executorComplete.Data.ToString();
+            messageData += executorComplete?.Data?.ToString();
         }
         else
         {
