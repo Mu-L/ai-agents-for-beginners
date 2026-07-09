@@ -70,17 +70,17 @@ async Task<byte[]> OpenImageBytesAsync(string path)
 var imageBytes = await OpenImageBytesAsync(imgPath);
 
 // Create AI agents for the sequential workflow
-AIAgent salesagent = azureClient.GetChatClient(deployment).AsAIAgent(
+AIAgent salesAgent = azureClient.GetChatClient(deployment).AsAIAgent(
     name: SalesAgentName, instructions: SalesAgentInstructions);
-AIAgent priceagent = azureClient.GetChatClient(deployment).AsAIAgent(
+AIAgent priceAgent = azureClient.GetChatClient(deployment).AsAIAgent(
     name: PriceAgentName, instructions: PriceAgentInstructions);
-AIAgent quoteagent = azureClient.GetChatClient(deployment).AsAIAgent(
+AIAgent quoteAgent = azureClient.GetChatClient(deployment).AsAIAgent(
     name: QuoteAgentName, instructions: QuoteAgentInstructions);
 
 // Build sequential workflow: Sales → Price → Quote
-var workflow = new WorkflowBuilder(salesagent)
-    .AddEdge(salesagent, priceagent)
-    .AddEdge(priceagent, quoteagent)
+var workflow = new WorkflowBuilder(salesAgent)
+    .AddEdge(salesAgent, priceAgent)
+    .AddEdge(priceAgent, quoteAgent)
     .Build();
 
 // Create user message with image and instructions
