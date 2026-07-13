@@ -46,7 +46,7 @@ const string FrontDeskAgentInstructions = @"""
     Consider suggestions when refining an idea.
     """;
 
-// Create AI agents with specialized instructions
+// Create AI agents with specialized instructions (convert to IChatClient to align with Microsoft.Extensions.AI abstractions and avoid type ambiguity)
 AIAgent reviewerAgent = azureClient.GetChatClient(deployment).AsIChatClient().AsAIAgent(
     name: ReviewerAgentName,
     instructions: ReviewerAgentInstructions,
