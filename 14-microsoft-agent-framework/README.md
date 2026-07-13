@@ -433,3 +433,10 @@ Code samples for Microsoft Agent Framework can be found in this repository under
 ## Got More Questions About Microsoft Agent Framework?
 
 Join the [Microsoft Foundry Discord](https://discord.com/invite/ATgtXmAS5D) to meet with other learners, attend office hours and get your AI Agents questions answered.
+## Previous Lesson
+
+[Memory for AI Agents](../13-agent-memory/README.md)
+
+## Next Lesson
+
+[Building Computer Use Agents (CUA)](../15-browser-use/README.md)
