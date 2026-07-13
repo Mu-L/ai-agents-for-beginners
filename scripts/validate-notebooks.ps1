@@ -32,6 +32,14 @@
 .PARAMETER List
     Only list the notebooks that would run; do not execute them.
 
+.PARAMETER Retries
+    Number of times to retry a notebook that fails with a *transient* error
+    (shared-quota HTTP 429, Azure CLI token hiccup, or a timeout). Deterministic
+    code errors (ImportError, TypeError, ...) are never retried. Default: 2.
+
+.PARAMETER RetryDelaySeconds
+    Backoff delay between transient retries, in seconds. Default: 20.
+
 .PARAMETER OutputDir
     Where executed copies, per-notebook logs, and results.json are written.
     Default: $env:TEMP\aiab-nbval
@@ -50,8 +58,11 @@ param(
     [string]$Python,
     [int]$Timeout = 300,
     [string]$Filter,
+    [string[]]$Only,
     [switch]$IncludeDotnet,
     [switch]$List,
+    [int]$Retries = 2,
+    [int]$RetryDelaySeconds = 20,
     [string]$OutputDir = (Join-Path $env:TEMP 'aiab-nbval')
 )
 
@@ -105,6 +116,12 @@ $nbs = Get-ChildItem -Path $RepoRoot -Recurse -Filter *.ipynb |
 if ($Filter) {
     $nbs = $nbs | Where-Object { $_.FullName.Substring($RepoRoot.Length + 1) -like $Filter }
 }
+if ($Only) {
+    $nbs = $nbs | Where-Object {
+        $rel = $_.FullName.Substring($RepoRoot.Length + 1)
+        @($Only | Where-Object { $rel -like "*$_*" }).Count -gt 0
+    }
+}
 
 Write-Host "Discovered $($nbs.Count) notebook(s) under $RepoRoot"
 if ($List) {
@@ -116,14 +133,30 @@ New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 Push-Location $RepoRoot
 try {
     $rows = @()
+    # Errors worth retrying: shared-quota 429s, Azure CLI token hiccups, and timeouts.
+    # Deterministic code errors (ImportError, TypeError, ...) are NOT retried.
+    $transient = 'HTTP/1.1 429|Too Many Requests|exceeded (call|token) rate limit|exceeded your current quota|CredentialUnavailable|Failed to invoke the Azure CLI|TimeoutError|timed out|Connection reset|ServiceResponseError'
     foreach ($nb in $nbs) {
         $rel = $nb.FullName.Substring($RepoRoot.Length + 1)
         $safe = ($rel -replace '[\\/:]', '_')
         $logf = Join-Path $OutputDir ("log_" + $safe + ".txt")
-        & $py -m nbconvert --to notebook --execute $nb.FullName `
-            --output-dir $OutputDir --output ("exec_" + $safe) `
-            --ExecutePreprocessor.timeout=$Timeout *> $logf
-        $code = $LASTEXITCODE
+        $code = 1
+        $attempt = 0
+        while ($true) {
+            $attempt++
+            & $py -m nbconvert --to notebook --execute $nb.FullName `
+                --output-dir $OutputDir --output ("exec_" + $safe) `
+                --ExecutePreprocessor.timeout=$Timeout *> $logf
+            $code = $LASTEXITCODE
+            if ($code -eq 0) { break }
+            $logText = (Get-Content $logf -Raw -ErrorAction SilentlyContinue)
+            if ($attempt -le $Retries -and $logText -match $transient) {
+                Write-Host ("  transient error, retry {0}/{1} in {2}s: {3}" -f $attempt, $Retries, $RetryDelaySeconds, $rel)
+                Start-Sleep -Seconds $RetryDelaySeconds
+                continue
+            }
+            break
+        }
         $err = ''
         if ($code -ne 0) {
             $m = Select-String -Path $logf -Pattern '(\w*Error|\w*Exception|CellExecutionError|StdinNotImplementedError):' | Select-Object -Last 1
@@ -132,7 +165,7 @@ try {
         }
         $status = if ($code -eq 0) { 'PASS' } else { 'FAIL' }
         "{0}  {1}  {2}" -f $status, $rel, $err
-        $rows += [pscustomobject]@{ Notebook = $rel; Status = $status; Exit = $code; Error = $err; Log = $logf }
+        $rows += [pscustomobject]@{ Notebook = $rel; Status = $status; Exit = $code; Error = $err; Log = $logf; Attempts = $attempt }
     }
 }
 finally {

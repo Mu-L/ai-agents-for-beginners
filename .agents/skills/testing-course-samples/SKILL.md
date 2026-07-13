@@ -49,6 +49,13 @@ pwsh scripts/validate-notebooks.ps1 -Python "C:/path/to/python.exe"
 The script writes executed copies, per-notebook logs, and `results.json` to
 `$env:TEMP\aiab-nbval` and exits with the number of failures.
 
+Transient failures (shared-subscription HTTP 429 rate limits, an occasional
+`AzureCliCredential` token hiccup, or a timeout) are retried automatically
+(`-Retries`, default 2, with `-RetryDelaySeconds` backoff, default 20). If a
+model deployment is regularly 429-ing, check the subscription's GlobalStandard
+TPM quota (`az cognitiveservices usage list -l <region>`) — raising a single
+deployment's capacity does not help when the *subscription* quota is exhausted.
+
 ## Interpreting results
 - `PASS` — the notebook ran end-to-end with no cell error.
 - `FAIL` — the first `*Error` / `*Exception` line is shown; open the matching
