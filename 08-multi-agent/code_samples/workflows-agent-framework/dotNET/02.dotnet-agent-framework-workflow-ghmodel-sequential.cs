@@ -1,6 +1,6 @@
 #!/usr/bin/dotnet run
 #:package Microsoft.Extensions.AI@10.*
-#:package Azure.AI.OpenAI@2.*
+#:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.15.0
 #:package System.Linq.Async@6.0.3
 #:package OpenTelemetry.Api@1.*
@@ -106,7 +106,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
         }
         if (id == executorComplete.ExecutorId)
         {
-            messageData += executorComplete?.Data?.ToString();
+            messageData += executorComplete.Data?.ToString();
         }
         else
         {
