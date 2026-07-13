@@ -13,6 +13,7 @@ using Microsoft.Extensions.AI;
 
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using OpenAI.Chat;
 
 // ============================================================================
 // TOOL USE DESIGN PATTERN DEMONSTRATION
@@ -217,8 +218,8 @@ Always mention which tools you used so users understand the agent's capabilities
 // Create AI Agent with Multiple Tools
 // This demonstrates the Tool Use Design Pattern with a variety of tool types
 AIAgent agent = azureClient
-    .GetOpenAIResponseClient(deployment)
-    .CreateAIAgent(
+    .GetChatClient(deployment)
+    .AsAIAgent(
         name: AGENT_NAME,
         instructions: AGENT_INSTRUCTIONS,
         tools: [
