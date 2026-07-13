@@ -58,6 +58,7 @@ param(
     [string]$Python,
     [int]$Timeout = 300,
     [string]$Filter,
+    [string[]]$Only,
     [switch]$IncludeDotnet,
     [switch]$List,
     [int]$Retries = 2,
@@ -114,6 +115,12 @@ $nbs = Get-ChildItem -Path $RepoRoot -Recurse -Filter *.ipynb |
 
 if ($Filter) {
     $nbs = $nbs | Where-Object { $_.FullName.Substring($RepoRoot.Length + 1) -like $Filter }
+}
+if ($Only) {
+    $nbs = $nbs | Where-Object {
+        $rel = $_.FullName.Substring($RepoRoot.Length + 1)
+        @($Only | Where-Object { $rel -like "*$_*" }).Count -gt 0
+    }
 }
 
 Write-Host "Discovered $($nbs.Count) notebook(s) under $RepoRoot"
