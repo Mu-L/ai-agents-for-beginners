@@ -15,6 +15,7 @@ This notebook demonstrates enterprise-grade planning and design patterns for bui
 **Required Dependencies:**
 ```xml
 <PackageReference Include="Microsoft.Extensions.AI" Version="10.*" />
+<PackageReference Include="Microsoft.Agents.AI" Version="1.*-*" />
 <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.*-*" />
 <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
 <PackageReference Include="Azure.Identity" Version="1.13.1" />
