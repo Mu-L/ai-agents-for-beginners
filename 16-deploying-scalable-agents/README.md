@@ -158,7 +158,7 @@ tracer = get_tracer()
 
 with tracer.start_as_current_span("support_request") as span:
     span.set_attribute("customer.tier", "enterprise")
-    span.set_attribute("routed.model", "gpt-4.1-mini")
+    span.set_attribute("routed.model", "gpt-5-nano")
     # agent execution is traced automatically inside this span
 ```
 
@@ -232,7 +232,7 @@ async def handle_support_request(query: str, customer_id: str) -> str:
         return cached
 
     # 2. Route by complexity to control cost.
-    model = "gpt-4.1-mini" if is_simple(query) else "gpt-4.1"
+    model = "gpt-5-nano" if is_simple(query) else "gpt-5-mini"
 
     # 3. Run the agent inside a trace span for observability.
     with tracer.start_as_current_span("support_request") as span:
