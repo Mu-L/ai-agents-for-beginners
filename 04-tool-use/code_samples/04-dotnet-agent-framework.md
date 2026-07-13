@@ -211,7 +211,7 @@ AIAgent agent = azureClient
 // Initialize a new conversation session to maintain context across multiple interactions
 // Sessions enable the agent to remember previous exchanges and maintain conversational state
 // This is essential for multi-turn conversations and contextual understanding
-AgentSession session = await agent.CreateSessionAsync();
+await using var session = await agent.CreateSessionAsync();
 
 // Execute Agent: First Travel Planning Request
 // Run the agent with an initial request that will likely trigger the random destination tool
