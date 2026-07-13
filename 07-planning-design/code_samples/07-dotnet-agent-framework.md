@@ -51,7 +51,7 @@ dotnet run 07-dotnet-agent-framework.cs
 The complete implementation is available in `07-dotnet-agent-framework.cs`, which demonstrates:
 
 - Loading environment configuration with DotNetEnv
-- Configuring the Azure OpenAI client for the Responses API
+- Configuring the Azure OpenAI client and creating an AI agent using `GetChatClient().AsAIAgent()`
 - Defining structured data models (Plan and TravelPlan) with JSON serialization
 - Creating an AI agent with structured output using JSON schema
 - Executing planning requests with type-safe responses
