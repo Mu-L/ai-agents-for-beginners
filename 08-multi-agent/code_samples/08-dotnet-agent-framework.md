@@ -2,7 +2,7 @@
 
 ## 📋 Learning Objectives
 
-This notebook demonstrates how to build sophisticated enterprise-grade multi-agent systems using the Microsoft Agent Framework in .NET with GitHub Models. You'll learn to orchestrate multiple specialized agents working together through structured workflows, leveraging .NET's enterprise features for production-ready solutions.
+This notebook demonstrates how to build sophisticated enterprise-grade multi-agent systems using the Microsoft Agent Framework in .NET with Azure OpenAI (Responses API). You'll learn to orchestrate multiple specialized agents working together through structured workflows, leveraging .NET's enterprise features for production-ready solutions.
 
 **Enterprise Multi-Agent Capabilities You'll Build:**
 - 👥 **Agent Collaboration**: Type-safe agent coordination with compile-time validation

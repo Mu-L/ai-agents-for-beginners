@@ -26,6 +26,10 @@ pillow
 python-dotenv
 uvicorn
 
+# Lesson 17 - Creating Local AI Agents with Foundry Local and Qwen
+foundry-local-sdk
+chromadb
+
 # Lesson 18 - Securing AI Agents with cryptographic receipts
 jcs
 pynacl

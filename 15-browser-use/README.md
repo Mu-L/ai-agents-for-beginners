@@ -139,3 +139,11 @@ Opal is a useful reference for what a **production-grade, trustworthy** computer
 - [Browser-Use Playwright integration template](https://docs.browser-use.com/examples/templates/playwright-integration)
 - [Browser-Use actor parameters and content extraction](https://docs.browser-use.com/customize/actor/all-parameters)
 - [Course Setup](../00-course-setup/README.md)
+
+## Previous Lesson
+
+[Exploring Microsoft Agent Framework](../14-microsoft-agent-framework/README.md)
+
+## Next Lesson
+
+[Deploying Scalable Agents](../16-deploying-scalable-agents/README.md)
