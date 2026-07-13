@@ -15,8 +15,6 @@ using Azure.Identity;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
-using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
-using OpenAI.Chat;
 using DotNetEnv;
 
 // Load environment variables from .env file
@@ -48,11 +46,15 @@ const string FrontDeskAgentInstructions = @"""
     Consider suggestions when refining an idea.
     """;
 
-// Create AI agents with specialized instructions
-AIAgent reviewerAgent = azureClient.GetChatClient(deployment).AsAIAgent(
-    name: ReviewerAgentName, instructions: ReviewerAgentInstructions);
-AIAgent frontDeskAgent = azureClient.GetChatClient(deployment).AsAIAgent(
-    name: FrontDeskAgentName, instructions: FrontDeskAgentInstructions);
+// Create AI agents with specialized instructions (convert to IChatClient to align with Microsoft.Extensions.AI abstractions and avoid type ambiguity)
+AIAgent reviewerAgent = azureClient.GetChatClient(deployment).AsIChatClient().AsAIAgent(
+    name: ReviewerAgentName,
+    instructions: ReviewerAgentInstructions,
+    description: "Reviews travel recommendations for authenticity.");
+AIAgent frontDeskAgent = azureClient.GetChatClient(deployment).AsIChatClient().AsAIAgent(
+    name: FrontDeskAgentName,
+    instructions: FrontDeskAgentInstructions,
+    description: "Provides concise travel activity recommendations.");
 
 // Build workflow with sequential agent execution
 var workflow = new WorkflowBuilder(frontDeskAgent)
@@ -81,7 +83,10 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
         }
         if (id == executorComplete.ExecutorId)
         {
-            messageData += executorComplete?.Data?.ToString();
+            if (executorComplete.Data is not null)
+            {
+                messageData += executorComplete.Data.ToString();
+            }
         }
         else
         {
