@@ -25,7 +25,7 @@ runs the notebooks locally.
 2. **`.env` at the repo root** (copy from [`.env.example`](../../../.env.example)) with at least:
    - `AZURE_AI_PROJECT_ENDPOINT` — Foundry project endpoint
      (`https://<account>.services.ai.azure.com/api/projects/<project>`)
-   - `AZURE_AI_MODEL_DEPLOYMENT_NAME` — a non-deprecated deployment (e.g. `gpt-4.1-mini`)
+   - `AZURE_AI_MODEL_DEPLOYMENT_NAME` — a non-deprecated deployment (e.g. `gpt-5-mini`)
    - `AZURE_OPENAI_ENDPOINT` (`https://<account>.openai.azure.com`) and `AZURE_OPENAI_DEPLOYMENT`
      for lessons that call Azure OpenAI directly (Lesson 06, 02-azure-openai, 14 handoff/human-loop).
 3. **`az login`** completed — samples authenticate with `AzureCliCredential` (Entra ID, keyless).
