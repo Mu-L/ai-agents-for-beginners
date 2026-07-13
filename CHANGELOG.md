@@ -2,7 +2,7 @@
 
 All notable changes to the **AI Agents for Beginners** course are documented in this file.
 
-## [Unreleased] — 2026-07-06
+## [Released] — 2026-07-06
 
 This release migrates the course to the **Azure OpenAI Responses API**, standardizes product naming on **Microsoft Foundry** and the **Microsoft Agent Framework (MAF)**, retires GitHub Models, updates SDK versions, and adds new content on local models and hosting other frameworks on Foundry.
 
