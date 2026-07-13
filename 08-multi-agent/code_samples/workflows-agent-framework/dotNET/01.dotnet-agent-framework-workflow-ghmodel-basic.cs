@@ -1,11 +1,11 @@
 #!/usr/bin/dotnet run
-#:package Microsoft.Extensions.AI@9.9.1
+#:package Microsoft.Extensions.AI@10.*
 #:package Azure.AI.OpenAI@2.1.0
 #:package Azure.Identity@1.15.0
 #:package System.Linq.Async@6.0.3
-#:package OpenTelemetry.Api@1.0.0
-#:package Microsoft.Agents.AI.Workflows@1.0.0-preview.251001.3
-#:package Microsoft.Agents.AI.OpenAI@1.0.0-preview.251001.3
+#:package OpenTelemetry.Api@1.*
+#:package Microsoft.Agents.AI.Workflows@1.*
+#:package Microsoft.Agents.AI.OpenAI@1.*-*
 #:package DotNetEnv@3.1.1
 
 using System;
@@ -15,6 +15,8 @@ using Azure.Identity;
 using Microsoft.Extensions.AI;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
+using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
+using OpenAI.Chat;
 using DotNetEnv;
 
 // Load environment variables from .env file
@@ -47,9 +49,9 @@ const string FrontDeskAgentInstructions = @"""
     """;
 
 // Create AI agents with specialized instructions
-AIAgent reviewerAgent = azureClient.GetOpenAIResponseClient(deployment).CreateAIAgent(
+AIAgent reviewerAgent = azureClient.GetChatClient(deployment).AsAIAgent(
     name: ReviewerAgentName, instructions: ReviewerAgentInstructions);
-AIAgent frontDeskAgent = azureClient.GetOpenAIResponseClient(deployment).CreateAIAgent(
+AIAgent frontDeskAgent = azureClient.GetChatClient(deployment).AsAIAgent(
     name: FrontDeskAgentName, instructions: FrontDeskAgentInstructions);
 
 // Build workflow with sequential agent execution
@@ -63,7 +65,7 @@ ChatMessage userMessage = new ChatMessage(ChatRole.User, [
 ]);
 
 // Execute workflow with streaming
-StreamingRun run = await InProcessExecution.StreamAsync(workflow, userMessage);
+StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, userMessage);
 
 // Process workflow events and collect results
 await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
@@ -71,7 +73,7 @@ string id = "";
 string messageData = "";
 await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false))
 {
-    if (evt is AgentRunUpdateEvent executorComplete)
+    if (evt is AgentResponseUpdateEvent executorComplete)
     {
         if (id == "")
         {
@@ -79,7 +81,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync().ConfigureAwait(false)
         }
         if (id == executorComplete.ExecutorId)
         {
-            messageData += executorComplete.Data.ToString();
+            messageData += executorComplete?.Data?.ToString();
         }
         else
         {
