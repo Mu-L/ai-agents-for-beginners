@@ -379,7 +379,7 @@ truststore.inject_into_ssl()
 
 このコースのコードを実行する準備が整いました。AIエージェントの世界についてさらに学んでいきましょう！
 
-[Introduction to AI Agents and Agent Use Cases](../01-intro-to-ai-agents/README.md)
+[AIエージェントとエージェントのユースケースの紹介](../01-intro-to-ai-agents/README.md)
 
 ---
 
