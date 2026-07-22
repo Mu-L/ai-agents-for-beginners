@@ -105,7 +105,7 @@ public class ConcurrentAggregationExecutor() :
     /// <param name="message">The message from the agent</param>
     /// <param name="context">Workflow context for accessing workflow services and adding events</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public async ValueTask HandleAsync(ChatMessage message, IWorkflowContext context)
+    public ValueTask HandleAsync(ChatMessage message, IWorkflowContext context)
     {
         this._messages.Add(message);
 
@@ -113,7 +113,9 @@ public class ConcurrentAggregationExecutor() :
         if (this._messages.Count == 2)
         {
             var formattedMessages = string.Join(Environment.NewLine, this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
-            await context.YieldOutputAsync(formattedMessages);
+            return context.YieldOutputAsync(formattedMessages);
         }
+
+        return ValueTask.CompletedTask;
     }
 }
