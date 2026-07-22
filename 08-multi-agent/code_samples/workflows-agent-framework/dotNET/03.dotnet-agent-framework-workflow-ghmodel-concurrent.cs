@@ -49,7 +49,7 @@ var aggregationExecutor = new ConcurrentAggregationExecutor();
 // Build concurrent workflow with Fan-Out/Fan-In pattern
 var workflow = new WorkflowBuilder(startExecutor)
     .AddFanOutEdge(startExecutor, targets: [researcherAgent, plannerAgent])
-    .AddFanInBarrierEdge(aggregationExecutor, sources: [researcherAgent, plannerAgent])
+    .AddFanInBarrierEdge(sources: [researcherAgent, plannerAgent], aggregationExecutor)
     .WithOutputFrom(aggregationExecutor)
     .Build();
 
