@@ -106,7 +106,7 @@ public class ConcurrentAggregationExecutor() : Executor<List<ChatMessage>>("Conc
     /// <param name="message">The message from the agent</param>
     /// <param name="context">Workflow context for accessing workflow services and adding events</param>
     /// <returns>A task representing the asynchronous operation</returns>
-    public override async ValueTask HandleAsync(List<ChatMessage> message, IWorkflowContext context, CancellationToken cancellationToken = default)
+    public ValueTask HandleAsync(ChatMessage message, IWorkflowContext context)
     {
         this._messages.AddRange(message);
     }
@@ -116,12 +116,10 @@ public class ConcurrentAggregationExecutor() : Executor<List<ChatMessage>>("Conc
         StringBuilder resultBuilder = new();
         foreach (ChatMessage m in this._messages)
         {
-            resultBuilder.AppendLine($"{m.AuthorName}: {m.Text}");
-            resultBuilder.AppendLine();
+            var formattedMessages = string.Join(Environment.NewLine, this._messages.Select(m => $"{m.AuthorName}: {m.Text}"));
+            return context.YieldOutputAsync(formattedMessages);
         }
 
-        this._messages.Clear();
-
-        return context.YieldOutputAsync(resultBuilder.ToString(), cancellationToken);
+        return ValueTask.CompletedTask;
     }
 }
